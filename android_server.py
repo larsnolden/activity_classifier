@@ -1,4 +1,5 @@
 import socket
+import joblib
 
 # data settings
 data_size = 512  # sending 16 bytes = 128 bits (binary touch states, for example)
@@ -7,6 +8,8 @@ data_size = 512  # sending 16 bytes = 128 bits (binary touch states, for example
 HOST = '10.53.85.94'
 PORT = 8888
 server_address = (HOST, PORT)
+
+model = joblib.load('./decision_tree.pkl')
 
 # start up server
 print('Setting up server on:', server_address)
@@ -38,6 +41,6 @@ while True:
         window.append(properties)
 
     if len(window) >= 25:
-        #print(predict(window));
+        print(model.predict(window))
 
 # process data
