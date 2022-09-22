@@ -1,13 +1,12 @@
 import socket
-import sys
 
 # data settings
-data_size = 256  # sending 16 bytes = 128 bits (binary touch states, for example)
+data_size = 512  # sending 16 bytes = 128 bits (binary touch states, for example)
 
 # server settings
-HOST = '192.168.1.76'
+HOST = '10.53.85.94'
 PORT = 8888
-server_address = (HOST, 8888)
+server_address = (HOST, PORT)
 
 # start up server
 print('Setting up server on:', server_address)
@@ -27,16 +26,16 @@ connection, client_address = server_socket.accept()
 print('Connected to:', client_address)
 
 
-# data formatting
-def data2binary(data):
-    return ' '.join([format(ord(i), 'b').zfill(8) for i in data])
-
-
 # listen for data for forever
 while True:
     data = connection.recv(data_size)
     received_string = data.decode("utf-8")
-    if received_string == "":
-        print('Received', data.decode("utf-8"))
+    if received_string != "":
+        print('Received', received_string)
+        properties = received_string.split(",")
+
+        print(properties[0])
+
+        #print(predict(properties));
 
 # process data
