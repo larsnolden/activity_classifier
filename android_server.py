@@ -28,14 +28,16 @@ print('Connected to:', client_address)
 
 # listen for data for forever
 while True:
+    window = []
     data = connection.recv(data_size)
     received_string = data.decode("utf-8")
     if received_string != "":
         print('Received', received_string)
         properties = received_string.split(",")
 
-        print(properties[0])
+        window.append(properties)
 
-        #print(predict(properties));
+    if len(window) >= 25:
+        #print(predict(window));
 
 # process data
