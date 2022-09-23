@@ -4,6 +4,10 @@ import joblib
 from collections import Counter
 import pandas as pd
 import datetime
+import os
+
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
 
 # data settings
 data_size = 86  # sending 16 bytes = 128 bits (binary touch states, for example)
@@ -40,6 +44,7 @@ export_df = pd.DataFrame(columns=['time', 'seconds_elapsed', 'Ax', 'Ay', 'Az', '
 current_recording_activity = None
 needs_to_save = False
 classified = False
+
 while True:
     data = connection.recv(data_size)
     received_string = data.decode("utf-8")
@@ -65,19 +70,28 @@ while True:
                 export_df = pd.DataFrame(columns=['time', 'seconds_elapsed', 'Ax', 'Ay', 'Az', 'Gx' ,'Gy', 'Gz', 'Activity'])
                 needs_to_save = False
                 window = []
+                cls()
             try:
                 parsed = list(map(lambda x: float(x), properties[2:8]))
                 window.append(parsed) #skip over magnetometer data 
             except:
                 print('bad data overlap')
 
-            if(len(window) == 20):
+            if(len(window) == 30):
                 predictions = model.predict(window[0:30])
-                print(Counter(predictions).most_common(1))
+                count = Counter(predictions)
+                cls()
+                count = {k: v for k, v in sorted(count.items(), key=lambda item: item[1], reverse=True)}
+                for key in count.keys():
+                    print('%s:%d%%'%(key, int(round(count.get(key)/30*100, 0))))
 
-            if len(window) >= 40:
-                predictions = model.predict(window[20:40])
-                print(Counter(predictions).most_common(1))
+            if len(window) == 40:
+                predictions = model.predict(window[10:40])
+                count = Counter(predictions)
+                count = {k: v for k, v in sorted(count.items(), key=lambda item: item[1], reverse=True)}
+                cls()
+                for key in count.keys():
+                    print('%s:%d%%'%(key, int(round(count.get(key)/30*100, 0))))
                 window = []
             classified = True
         else:
