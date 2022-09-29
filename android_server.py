@@ -10,10 +10,10 @@ def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 # data settings
-data_size = 86  # sending 16 bytes = 128 bits (binary touch states, for example)
+data_size = 100  # sending 16 bytes = 128 bits (binary touch states, for example);
 
 # server settings
-HOST = '172.20.10.2'
+HOST = '10.53.85.94'
 PORT = 8776
 EXPORT_FOLDER_PATH='./training_data'
 server_address = (HOST, PORT)
